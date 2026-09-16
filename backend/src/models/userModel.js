@@ -6,7 +6,6 @@ const userSchema = mongoose.Schema(
     name: {
       type: String,
       required: true,
-      trim: true,
       minLength: 2,
       maxLength: 20,
       trim: true,
@@ -15,11 +14,13 @@ const userSchema = mongoose.Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
 
     email: {
       type: String,
       required: true,
+      lowercase: true,
       immutable: true,
       unique: true,
       trim: true,
@@ -32,7 +33,7 @@ const userSchema = mongoose.Schema(
     },
 
     role: {
-      type: "String",
+      type: String,
       enum: {
         values: ["owner", "admin", "employee"],
         message: "{VALUE} is not a valid role",
@@ -43,10 +44,12 @@ const userSchema = mongoose.Schema(
 
     organisationId: {
       type: mongoose.Schema.Types.ObjectId,
+      default: null,
     },
 
     teamId: {
       type: mongoose.Schema.Types.ObjectId,
+      default: null,
     },
 
     isActive: {
