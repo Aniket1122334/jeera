@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const AppError = require("../utils/AppError");
 const validator = require("validator");
+const userModel = require("../models/userModel");
 
-const isLoggedIn = (req, res, next) => {
+const isLoggedIn = async (req, res, next) => {
   const { token } = req.cookies;
 
   if (!token) {
@@ -15,9 +16,13 @@ const isLoggedIn = (req, res, next) => {
 
   const decodedObj = jwt.verify(token, process.env.JWT_SECRET);
 
-  req.user = {
-    id: decodedObj.id,
-  };
+  const foundUser = await userModel.findById(decodedObj.id);
+
+  if (!foundUser) {
+    throw new AppError(400, "User not found");
+  }
+
+  req.user = foundUser;
 
   next();
 };

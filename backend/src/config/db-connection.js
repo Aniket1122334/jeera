@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const AddOwner = require("../utils/AddOwner");
+const AddUser = require("../utils/AddUser");
 
 const connectDB = async () => {
   try {

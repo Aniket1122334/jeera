@@ -7,6 +7,7 @@ const app = express();
 
 // routes import
 const authRoute = require("./routes/authRoutes/authRoutes");
+const orgRoute = require("./routes/orgRoutes/orgRoutes");
 
 // middlewares
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use(
 
 // routes
 app.use("/api/auth/", authRoute);
+app.use("/api/org/", orgRoute);
 
 // error handling
 app.use((err, req, res, next) => {

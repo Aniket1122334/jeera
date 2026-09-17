@@ -1,15 +1,15 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../models/userModel");
 
-const AddOwner = async (name, password, email) => {
+const AddUser = async (name, password, email, role) => {
   let pw = await bcrypt.hash(password, 10);
 
   await userModel.create({
     name: name,
     email: email,
     password: pw,
-    role: "owner",
+    role: role,
   });
 };
 
-module.exports = AddOwner;
+module.exports = AddUser;

@@ -56,7 +56,7 @@ module.exports.logout = async (req, res) => {
 };
 
 module.exports.me = async (req, res) => {
-  const user = await userModel.findById(req.user.id);
+  const user = req.user;
 
   if (!user) {
     throw new AppError(404, "User not found");
