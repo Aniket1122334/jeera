@@ -45,6 +45,7 @@ const userSchema = mongoose.Schema(
     organisationId: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,
+      ref: "Org",
     },
 
     teamId: {
