@@ -14,9 +14,17 @@ const isLoggedIn = async (req, res, next) => {
     throw new AppError(401, "Please provide a valid token");
   }
 
-  const decodedObj = jwt.verify(token, process.env.JWT_SECRET);
+  let decodedObj;
 
-  const foundUser = await userModel.findById(decodedObj.id);
+  try {
+    decodedObj = jwt.verify(token, process.env.JWT_SECRET);
+  } catch (error) {
+    throw new AppError(401, "Token is expired or invalid");
+  }
+
+  const foundUser = await userModel
+    .findById(decodedObj.id)
+    .populate("organisationId");
 
   if (!foundUser) {
     throw new AppError(400, "User not found");

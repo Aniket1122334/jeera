@@ -51,6 +51,7 @@ const userSchema = mongoose.Schema(
     teamId: {
       type: mongoose.Schema.Types.ObjectId,
       default: null,
+      ref: "Team",
     },
 
     isActive: {
