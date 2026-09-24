@@ -27,7 +27,11 @@ const isLoggedIn = async (req, res, next) => {
     .populate("organisationId");
 
   if (!foundUser) {
-    throw new AppError(400, "User not found");
+    throw new AppError(401, "User not found");
+  }
+
+  if (!foundUser.isActive) {
+    throw new AppError(403, "Your account is inactive");
   }
 
   req.user = foundUser;
