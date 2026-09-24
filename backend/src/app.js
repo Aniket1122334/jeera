@@ -9,6 +9,7 @@ const app = express();
 const authRoute = require("./routes/authRoutes/authRoutes");
 const orgRoute = require("./routes/orgRoutes/orgRoutes");
 const adminRoute = require("./routes/adminRoutes/adminRoutes");
+const employeeRoute = require("./routes/employeeRoutes/employeeRoutes");
 
 // middlewares
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(
 app.use("/api/auth/", authRoute);
 app.use("/api/org/", orgRoute);
 app.use("/api/admin/", adminRoute);
+app.use("/api/employee", employeeRoute);
 
 // error handling
 app.use((err, req, res, next) => {
