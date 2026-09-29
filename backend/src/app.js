@@ -10,6 +10,7 @@ const authRoute = require("./routes/authRoutes/authRoutes");
 const orgRoute = require("./routes/orgRoutes/orgRoutes");
 const adminRoute = require("./routes/adminRoutes/adminRoutes");
 const employeeRoute = require("./routes/employeeRoutes/employeeRoutes");
+const analyticsRoute = require("./routes/analyticsRoutes/analyticsRoutes");
 
 // middlewares
 app.use(express.json());
@@ -17,12 +18,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cp());
 app.use(
   cors({
+    origin: ["hostDomain", "http://localhost:5173"],
     credentials: true, //allowing browser to request cookies
   }),
 );
 
 // routes
 app.use("/api/auth/", authRoute);
+app.use("/api/analytics", analyticsRoute);
 app.use("/api/org/", orgRoute);
 app.use("/api/admin/", adminRoute);
 app.use("/api/employee", employeeRoute);

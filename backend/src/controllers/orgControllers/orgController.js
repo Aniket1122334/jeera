@@ -29,19 +29,54 @@ module.exports.createOrg = async (req, res) => {
 };
 
 module.exports.getOrgs = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query;
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 10;
 
-  skip = Number(page);
-  limit = Number(limit);
+  if (page < 1) {
+    throw new AppError(400, "Invalid page number");
+  }
 
-  const data = await orgModel
-    .find()
-    .limit(limit)
-    .skip((page - 1) * limit);
+  if (limit < 1 || limit > 50) {
+    throw new AppError(400, "Invalid limit");
+  }
+
+  const skip = (page - 1) * limit;
+
+  const organisations = await orgModel.find().skip(skip).limit(limit);
+
+  const data = await Promise.all(
+    organisations.map(async (organisation) => {
+      const adminCount = await userModel.countDocuments({
+        organisationId: organisation._id,
+        role: "admin",
+      });
+
+      const userCount = await userModel.countDocuments({
+        organisationId: organisation._id,
+        role: {
+          $in: ["admin", "employee"],
+        },
+      });
+
+      return {
+        ...organisation.toObject(),
+        adminCount,
+        userCount,
+      };
+    }),
+  );
+
+  const totalOrganisations = await orgModel.countDocuments();
 
   return res.status(200).json({
-    msg: "Organisations fetch successfully",
+    msg: "Organisations fetched successfully",
     data,
+    pagination: {
+      currentPage: page,
+      limit,
+      totalOrganisations,
+      totalPages: Math.ceil(totalOrganisations / limit),
+    },
   });
 };
 
