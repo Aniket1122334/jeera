@@ -1,52 +1,10 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import {
-  LayoutDashboard,
-  CheckSquare,
-  Users,
-  UserRound,
-  MessageSquare,
-  BarChart3,
-  Settings,
-  LogOut,
-} from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ navItems }) => {
   const [expanded, setExpanded] = useState(false);
-
-  const navItems = [
-    {
-      path: "/dashboard",
-      label: "Dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      path: "/tasks",
-      label: "Tasks",
-      icon: CheckSquare,
-    },
-    {
-      path: "/teams",
-      label: "Teams",
-      icon: Users,
-    },
-    {
-      path: "/employees",
-      label: "Employees",
-      icon: UserRound,
-    },
-    {
-      path: "/chat",
-      label: "Team Chat",
-      icon: MessageSquare,
-    },
-    {
-      path: "/analytics",
-      label: "Analytics",
-      icon: BarChart3,
-    },
-  ];
 
   return (
     <aside

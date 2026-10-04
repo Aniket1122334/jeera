@@ -42,7 +42,11 @@ module.exports.getOrgs = async (req, res) => {
 
   const skip = (page - 1) * limit;
 
-  const organisations = await orgModel.find().skip(skip).limit(limit);
+  const organisations = await orgModel
+    .find()
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
   const data = await Promise.all(
     organisations.map(async (organisation) => {

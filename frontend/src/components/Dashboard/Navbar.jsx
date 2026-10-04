@@ -6,8 +6,6 @@ const Navbar = ({ user }) => {
   const [mobileSearch, setMobileSearch] = useState(false);
   const [search, setSearch] = useState("");
 
-  console.log(user);
-
   const handleLogout = () => {
     console.log("Logout");
     // Add logout API here later

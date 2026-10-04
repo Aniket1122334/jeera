@@ -26,22 +26,55 @@ module.exports.addTeam = async (req, res) => {
 };
 
 module.exports.getAllTeams = async (req, res) => {
-  if (req.user.role === "owner") {
-    // Owner is global, so fetch all teams
-    foundTeams = await teamModel.find();
-  } else {
-  }
-  // Admin can only see teams of their organisation and the teams that he/she created
-  const organisationId = req.user.organisationId._id;
+  let foundTeams;
 
-  foundTeams = await teamModel.find({
-    organisationId,
-    adminId: req.user._id,
-  });
+  // Owner can see all teams
+  if (req.user.role === "owner") {
+    foundTeams = await teamModel.find();
+  }
+
+  // Admin can see only their own teams
+  else if (req.user.role === "admin") {
+    const organisationId = req.user.organisationId._id;
+
+    foundTeams = await teamModel.find({
+      organisationId,
+      adminId: req.user._id,
+    });
+  } else {
+    throw new AppError(403, "You are not allowed to access teams");
+  }
+
+  // Add employee and task counts to every team
+  const data = await Promise.all(
+    foundTeams.map(async (team) => {
+      const activeEmployees = await userModel.countDocuments({
+        organisationId: team.organisationId,
+        teamId: team._id,
+        role: "employee",
+        isActive: true,
+      });
+
+      const activeTasks = await taskModel.countDocuments({
+        organisationId: team.organisationId,
+        teamId: team._id,
+        status: {
+          $in: ["todo", "in-progress"],
+        },
+      });
+
+      return {
+        ...team.toObject(),
+        activeEmployees,
+        activeTasks,
+      };
+    }),
+  );
+
   return res.status(200).json({
     msg: "Teams fetched successfully",
-    count: foundTeams.length,
-    data: foundTeams,
+    count: data.length,
+    data,
   });
 };
 
