@@ -35,22 +35,27 @@ module.exports.loginUser = async (req, res) => {
     expiresIn: "1d",
   });
 
+  const cookieOptions = {
+    maxAge: 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+  };
+
   return res
     .status(200)
-    .cookie("token", token, {
-      maxAge: 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      sameSite: "strict",
-      httpOnly: true,
-      // secure:true
-    })
+    .cookie("token", token, cookieOptions)
     .json({
       msg: "User logged in successful",
     });
 };
 
 module.exports.logout = async (req, res) => {
-  return res.clearCookie("token").status(200).json({
+  return res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    secure: process.env.NODE_ENV === "production",
+  }).status(200).json({
     msg: "User logged out successful",
   });
 };

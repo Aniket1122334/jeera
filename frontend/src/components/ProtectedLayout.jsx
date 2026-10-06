@@ -28,11 +28,7 @@ const ProtectedLayout = () => {
       label: "Organizations",
       icon: Users,
     },
-    {
-      path: "/admins",
-      label: "Admins",
-      icon: UserRound,
-    },
+    { path: "/admins", label: "Admins", icon: UserRound },
   ];
 
   const adminNavItems = [
@@ -73,21 +69,27 @@ const ProtectedLayout = () => {
     },
   ];
 
+  const employeeNavItems = [
+    { path: "/dashboard", label: "My tasks", icon: LayoutDashboard },
+    { path: "/chat", label: "Team chat", icon: MessageSquare },
+    { path: "/settings", label: "Profile", icon: Settings },
+  ];
+
   const navItems =
     user?.role === "owner"
       ? ownerNavItems
       : user?.role === "admin"
         ? adminNavItems
-        : [];
+        : employeeNavItems;
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-[#f6f8fc]">
       <Navbar user={user} />
 
-      <div className="flex">
+      <div className="flex min-h-[calc(100vh-4rem)]">
         <Sidebar navItems={navItems} />
 
-        <main className="min-w-0 flex-1">
+        <main className="min-w-0 flex-1 pb-20 lg:pb-0 lg:pl-[72px]">
           <Outlet />
         </main>
       </div>

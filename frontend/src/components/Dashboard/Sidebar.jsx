@@ -23,11 +23,13 @@ const Sidebar = ({ navItems }) => {
         bottom-0
         left-0
         flex
-        h-16
+        h-[4.5rem]
         w-full
         flex-row
         items-center
-        justify-around
+        justify-start
+        overflow-x-auto
+        px-2
         border-t
         shadow-[0_-2px_10px_rgba(0,0,0,0.04)]
 
@@ -58,17 +60,22 @@ const Sidebar = ({ navItems }) => {
       ====================================================== */}
 
       <div
-        className="
-          flex
-          h-full
-          w-full
-          items-center
-          justify-around
+          className="
+            flex
+            h-full
+            w-full
+            items-center
+            justify-start
+            gap-1
+            overflow-x-auto
+            px-1
 
-          lg:flex-1
-          lg:flex-col
-          lg:items-stretch
-          lg:justify-start
+            lg:flex-1
+            lg:flex-col
+            lg:items-stretch
+            lg:justify-start
+            lg:gap-2
+            lg:overflow-visible
           lg:px-3
           lg:py-5
         "
@@ -127,8 +134,12 @@ const Sidebar = ({ navItems }) => {
                 className={({ isActive }) => `
                   group
                   flex
-                  h-10
-                  w-10
+                  h-12
+                  min-w-[4.25rem]
+                  flex-col
+                  gap-1
+                  px-2
+                  py-1
                   shrink-0
                   items-center
                   justify-center
@@ -139,6 +150,10 @@ const Sidebar = ({ navItems }) => {
                   duration-200
 
                   /* Desktop expanded */
+                  lg:h-10
+                  lg:min-w-0
+                  lg:flex-row
+                  lg:py-0
                   lg:w-full
                   ${
                     expanded
@@ -174,15 +189,17 @@ const Sidebar = ({ navItems }) => {
                     {/* Desktop label only */}
                     <span
                       className={`
-                        hidden
+                        block
                         overflow-hidden
                         whitespace-nowrap
+                        text-[10px]
+                        leading-none
                         transition-all
                         duration-200
 
                         ${
                           expanded
-                            ? "lg:block lg:opacity-100"
+                          ? "lg:block lg:opacity-100"
                             : "lg:hidden lg:opacity-0"
                         }
                       `}

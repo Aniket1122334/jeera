@@ -605,10 +605,15 @@ module.exports.getAllTasks = async (req, res) => {
       .populate("assignedTo", "name email")
       .populate("createdBy", "name email");
   } else if (req.user.role === "admin") {
+    const managedTeams = await teamModel.find({
+      organisationId: req.user.organisationId._id,
+      adminId: req.user._id,
+    }).select("_id");
     // Admin → only own organisation
     allTasks = await taskModel
       .find({
         organisationId: req.user.organisationId,
+        teamId: { $in: managedTeams.map((team) => team._id) },
       })
       .populate("teamId")
       .populate("assignedTo", "name email")
@@ -819,6 +824,18 @@ module.exports.updateTask = async (req, res) => {
   if (!foundEmployee) {
     throw new AppError(400, "Employee does not belong to the selected team");
   }
+
+  const currentTask = await taskModel.findOne({
+    _id: taskId,
+    organisationId: req.user.organisationId._id,
+  }).select("teamId");
+  if (!currentTask) throw new AppError(404, "Task not found");
+  const currentTeam = await teamModel.findOne({
+    _id: currentTask.teamId,
+    organisationId: req.user.organisationId._id,
+    adminId: req.user._id,
+  });
+  if (!currentTeam) throw new AppError(403, "You do not have access to this task");
 
   // -----------------------------
   // Update Task

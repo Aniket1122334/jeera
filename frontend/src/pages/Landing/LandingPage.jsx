@@ -189,7 +189,7 @@ function LandingPage() {
                 </button>
 
                 <button
-                  onClick={() => scrollTo("login")}
+                  onClick={() => { setMobileMenu(false); navigate("/login"); }}
                   className="mt-2 w-full rounded-xl bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
                 >
                   Get started
