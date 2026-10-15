@@ -1,10 +1,24 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "sonner";
 
 import { Settings, LogOut } from "lucide-react";
 
-const Sidebar = ({ navItems }) => {
+const Sidebar = ({ navItems, user }) => {
   const [expanded, setExpanded] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {}, { withCredentials: true });
+      navigate("/login", { replace: true });
+      toast.success("Signed out successfully");
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Unable to sign out");
+    }
+  };
 
   return (
     <aside
@@ -53,6 +67,7 @@ const Sidebar = ({ navItems }) => {
         transition-all
         duration-300
         ease-in-out
+        overflow-hidden
       `}
     >
       {/* =====================================================
@@ -349,7 +364,7 @@ const Sidebar = ({ navItems }) => {
               text-white
             "
           >
-            A
+          {user?.name?.slice(0, 1).toUpperCase() || "U"}
           </div>
 
           {/* Profile details */}
@@ -364,18 +379,16 @@ const Sidebar = ({ navItems }) => {
             `}
           >
             <p className="truncate text-sm font-semibold text-slate-900">
-              Aniket
+              {user?.name || "User"}
             </p>
 
-            <p className="text-xs text-slate-500">Admin</p>
+            <p className="text-xs capitalize text-slate-500">{user?.role || "Member"}</p>
           </div>
         </div>
 
         {/* Logout */}
         <button
-          onClick={() => {
-            console.log("Logout");
-          }}
+          onClick={handleLogout}
           title="Logout"
           className={`
             group

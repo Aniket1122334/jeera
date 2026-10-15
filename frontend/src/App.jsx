@@ -5,7 +5,8 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProtectedLayout from "./components/ProtectedLayout";
 import Organizations from "./pages/Organizations/Organizations";
-import { AdminsPage, AnalyticsPage, ChatPage, EmployeesPage, SettingsPage, TasksPage, TeamsPage } from "./pages/WorkspacePages";
+import { AdminsPage, AnalyticsPage, EmployeesPage, SettingsPage, TasksPage, TeamsPage } from "./pages/ManagementPages";
+import ChatPage from "./pages/Chat/ChatPage";
 import { Navigate } from "react-router-dom";
 
 const App = () => {

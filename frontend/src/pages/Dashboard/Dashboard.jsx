@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 
 import AdminDashboard from "../../components/Dashboard/AdminDashboard";
 import OwnerDashboard from "../../components/Dashboard/OwnerDashboard";
-import { TasksPage } from "../WorkspacePages";
+import { TasksPage } from "../ManagementPages";
 
 const Dashboard = () => {
   const user = useSelector((state) => state.user.user.data);

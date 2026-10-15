@@ -1,5 +1,4 @@
 import axios from "axios";
-
 import {
   ArrowRight,
   CheckCircle2,
@@ -9,26 +8,17 @@ import {
   UserRound,
   Users,
 } from "lucide-react";
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 import { getTasks } from "../../utils/redux/slices/taskSlice";
 import { getTeams } from "../../utils/redux/slices/teamSlice";
-
 const AdminDashboard = ({ user }) => {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const [analytics, setAnalytics] = useState(null);
-
   const tasks = useSelector((state) => state.tasks?.tasks?.data) || [];
-
   const teams = useSelector((state) => state.teams?.teams?.data) || [];
-
-  /* ============================================================
-     FETCH DATA
-  ============================================================ */
-
   useEffect(() => {
     axios
       .get(
@@ -43,42 +33,21 @@ const AdminDashboard = ({ user }) => {
       .catch((error) => {
         console.error("Failed to fetch admin analytics:", error);
       });
-
     dispatch(getTasks());
     dispatch(getTeams());
   }, [dispatch]);
-
-  /* ============================================================
-     SAFE VALUES
-  ============================================================ */
-
   const totalTasks = Number(analytics?.totalTasks) || 0;
-
   const completedTasks = Number(analytics?.completedTasks) || 0;
-
   const activeTasks = Number(analytics?.activeTasks) || 0;
-
   const pendingTasks = Number(analytics?.pendingTasks) || 0;
-
-  /* ============================================================
-     PERCENTAGES
-  ============================================================ */
-
   const completedPercentage =
     totalTasks > 0 ? Math.min((completedTasks / totalTasks) * 100, 100) : 0;
-
   const activePercentage =
     totalTasks > 0 ? Math.min((activeTasks / totalTasks) * 100, 100) : 0;
-
   const pendingPercentage =
     totalTasks > 0 ? Math.min((pendingTasks / totalTasks) * 100, 100) : 0;
-
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* =====================================================
-          MAIN CONTENT
-      ====================================================== */}
-
       <main
         className="
           min-h-screen
@@ -86,14 +55,9 @@ const AdminDashboard = ({ user }) => {
           py-6
           sm:px-6
           lg:px-8
-          lg:ml-[4.75rem]
         "
       >
         <div className="mx-auto w-full max-w-[1500px]">
-          {/* =================================================
-              HEADER
-          ================================================= */}
-
           <section className="mb-7">
             <div
               className="
@@ -105,8 +69,6 @@ const AdminDashboard = ({ user }) => {
                 lg:justify-between
               "
             >
-              {/* Heading */}
-
               <div>
                 <h1
                   className="
@@ -120,7 +82,6 @@ const AdminDashboard = ({ user }) => {
                   Welcome back, {user?.name || "Admin"}
                   <span className="ml-2">👋</span>
                 </h1>
-
                 <p
                   className="
                     mt-2
@@ -134,10 +95,8 @@ const AdminDashboard = ({ user }) => {
                   from one place.
                 </p>
               </div>
-
-              {/* Action */}
-
               <button
+                onClick={() => navigate("/tasks")}
                 className="
                   inline-flex
                   w-full
@@ -166,11 +125,6 @@ const AdminDashboard = ({ user }) => {
               </button>
             </div>
           </section>
-
-          {/* =================================================
-              STATS
-          ================================================= */}
-
           <section
             className="
               mb-7
@@ -186,30 +140,22 @@ const AdminDashboard = ({ user }) => {
               value={analytics?.totalTeams ?? 0}
               icon={Users}
             />
-
             <AdminStat
               title="Total Employees"
               value={analytics?.totalEmployees ?? 0}
               icon={UserRound}
             />
-
             <AdminStat
               title="Active Tasks"
               value={activeTasks}
               icon={ListTodo}
             />
-
             <AdminStat
               title="Completed Tasks"
               value={completedTasks}
               icon={CheckCircle2}
             />
           </section>
-
-          {/* =================================================
-              RECENT TASKS
-          ================================================= */}
-
           <section className="grid grid-cols-1 gap-6">
             <div
               className="
@@ -220,8 +166,6 @@ const AdminDashboard = ({ user }) => {
                 bg-white
               "
             >
-              {/* Header */}
-
               <div
                 className="
                   flex
@@ -238,13 +182,12 @@ const AdminDashboard = ({ user }) => {
                   <h2 className="text-base font-semibold text-slate-900">
                     Recent Tasks
                   </h2>
-
                   <p className="mt-1 text-xs text-slate-500 sm:text-sm">
                     Monitor the latest task activity.
                   </p>
                 </div>
-
                 <button
+                  onClick={() => navigate("/tasks")}
                   className="
                     inline-flex
                     items-center
@@ -261,9 +204,6 @@ const AdminDashboard = ({ user }) => {
                   <ArrowRight size={15} />
                 </button>
               </div>
-
-              {/* Task List */}
-
               <div className="divide-y divide-slate-100">
                 {tasks.length > 0 ? (
                   tasks
@@ -282,11 +222,9 @@ const AdminDashboard = ({ user }) => {
                   <EmptyState message="No tasks available." />
                 )}
               </div>
-
-              {/* Mobile Action */}
-
               <div className="border-t border-slate-100 p-4 sm:hidden">
                 <button
+                  onClick={() => navigate("/tasks")}
                   className="
                     flex
                     w-full
@@ -311,11 +249,6 @@ const AdminDashboard = ({ user }) => {
               </div>
             </div>
           </section>
-
-          {/* =================================================
-              SECOND ROW
-          ================================================= */}
-
           <section
             className="
               mt-6
@@ -325,10 +258,6 @@ const AdminDashboard = ({ user }) => {
               xl:grid-cols-3
             "
           >
-            {/* =================================================
-                TEAMS
-            ================================================= */}
-
             <div
               className="
                 overflow-hidden
@@ -339,8 +268,6 @@ const AdminDashboard = ({ user }) => {
                 xl:col-span-2
               "
             >
-              {/* Header */}
-
               <div
                 className="
                   flex
@@ -357,13 +284,12 @@ const AdminDashboard = ({ user }) => {
                   <h2 className="text-base font-semibold text-slate-900">
                     Teams
                   </h2>
-
                   <p className="mt-1 text-xs text-slate-500 sm:text-sm">
                     Overview of your organization teams.
                   </p>
                 </div>
-
                 <button
+                  onClick={() => navigate("/teams")}
                   className="
                     inline-flex
                     items-center
@@ -380,9 +306,6 @@ const AdminDashboard = ({ user }) => {
                   <ArrowRight size={15} />
                 </button>
               </div>
-
-              {/* Team List */}
-
               <div
                 className="
                   grid
@@ -412,11 +335,6 @@ const AdminDashboard = ({ user }) => {
                 )}
               </div>
             </div>
-
-            {/* =================================================
-                TASK SUMMARY
-            ================================================= */}
-
             <div
               className="
                 rounded-2xl
@@ -431,12 +349,10 @@ const AdminDashboard = ({ user }) => {
                 <h2 className="text-base font-semibold text-slate-900">
                   Task Summary
                 </h2>
-
                 <p className="mt-1 text-xs text-slate-500 sm:text-sm">
                   Current task distribution.
                 </p>
               </div>
-
               <div className="mt-6 space-y-5">
                 <TaskSummary
                   label="Completed"
@@ -444,14 +360,12 @@ const AdminDashboard = ({ user }) => {
                   percentage={completedPercentage}
                   type="completed"
                 />
-
                 <TaskSummary
                   label="In Progress"
                   value={activeTasks}
                   percentage={activePercentage}
                   type="progress"
                 />
-
                 <TaskSummary
                   label="Pending"
                   value={pendingTasks}
@@ -461,42 +375,11 @@ const AdminDashboard = ({ user }) => {
               </div>
             </div>
           </section>
-
-          {/* =================================================
-              ANALYTICS
-          ================================================= */}
-
-          <section
-            className="
-              mt-6
-              grid
-              grid-cols-1
-              gap-6
-              lg:grid-cols-2
-            "
-          >
-            <AnalyticsCard
-              title="Task Activity"
-              description="Task activity over the last 6 months."
-              type="tasks"
-            />
-
-            <AnalyticsCard
-              title="Employee Activity"
-              description="Employee activity across your organization."
-              type="employees"
-            />
-          </section>
         </div>
       </main>
     </div>
   );
 };
-
-/* ============================================================
-   ADMIN STAT
-============================================================ */
-
 const AdminStat = ({ title, value, icon: Icon }) => {
   return (
     <div
@@ -527,20 +410,13 @@ const AdminStat = ({ title, value, icon: Icon }) => {
           <Icon size={20} strokeWidth={1.8} />
         </div>
       </div>
-
       <p className="mt-5 text-sm text-slate-500">{title}</p>
-
       <p className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
         {value}
       </p>
     </div>
   );
 };
-
-/* ============================================================
-   TASK ROW
-============================================================ */
-
 const TaskRow = ({ title, employee, team, priority, status }) => {
   return (
     <div
@@ -575,22 +451,17 @@ const TaskRow = ({ title, employee, team, priority, status }) => {
         >
           <CheckSquare size={17} />
         </div>
-
         <div className="min-w-0">
           <p className="truncate text-sm font-semibold text-slate-800">
             {title}
           </p>
-
           <p className="mt-1 truncate text-xs text-slate-400">
             {employee}
-
             <span className="mx-1.5">·</span>
-
             {team}
           </p>
         </div>
       </div>
-
       <div className="flex flex-wrap items-center gap-2">
         <span
           className={`
@@ -610,7 +481,6 @@ const TaskRow = ({ title, employee, team, priority, status }) => {
         >
           {priority}
         </span>
-
         <span
           className={`
             rounded-md
@@ -633,11 +503,6 @@ const TaskRow = ({ title, employee, team, priority, status }) => {
     </div>
   );
 };
-
-/* ============================================================
-   TEAM ROW
-============================================================ */
-
 const TeamRow = ({ name, employees, tasks }) => {
   return (
     <div
@@ -667,26 +532,17 @@ const TeamRow = ({ name, employees, tasks }) => {
       >
         <Users size={18} />
       </div>
-
       <div className="min-w-0">
         <p className="truncate text-sm font-semibold text-slate-800">{name}</p>
-
         <p className="mt-1 text-xs text-slate-400">
           {employees}
-
           <span className="mx-1.5">·</span>
-
           {tasks}
         </p>
       </div>
     </div>
   );
 };
-
-/* ============================================================
-   TASK SUMMARY
-============================================================ */
-
 const TaskSummary = ({ label, value, percentage, type }) => {
   const progressColor =
     type === "completed"
@@ -694,29 +550,17 @@ const TaskSummary = ({ label, value, percentage, type }) => {
       : type === "progress"
         ? "bg-indigo-500"
         : "bg-slate-400";
-
-  /*
-  Keep percentage between 0 and 100.
-  */
-
   const safePercentage = Math.min(Math.max(Number(percentage) || 0, 0), 100);
-
   return (
     <div>
-      {/* Label + Percentage */}
-
       <div className="mb-2 flex items-center justify-between gap-3">
         <span className="text-sm font-medium text-slate-700">{label}</span>
-
         <span className="shrink-0 text-xs text-slate-400">
           {value} {value === 1 ? "task" : "tasks"}{" "}
           <span className="mx-1">•</span>
           {safePercentage.toFixed(0)}%
         </span>
       </div>
-
-      {/* Progress Bar */}
-
       <div className="h-2 overflow-hidden rounded-full bg-slate-100">
         <div
           style={{
@@ -734,11 +578,6 @@ const TaskSummary = ({ label, value, percentage, type }) => {
     </div>
   );
 };
-
-/* ============================================================
-   EMPTY STATE
-============================================================ */
-
 const EmptyState = ({ message }) => {
   return (
     <div className="px-5 py-10 text-center sm:px-6">
@@ -746,138 +585,19 @@ const EmptyState = ({ message }) => {
     </div>
   );
 };
-
-/* ============================================================
-   ANALYTICS CARD
-============================================================ */
-
-const AnalyticsCard = ({ title, description, type }) => {
-  const bars =
-    type === "employees" ? [32, 45, 38, 58, 68, 82] : [40, 52, 44, 65, 74, 88];
-
-  return (
-    <div
-      className="
-        overflow-hidden
-        rounded-2xl
-        border
-        border-slate-200
-        bg-white
-        p-5
-        sm:p-6
-      "
-    >
-      {/* Header */}
-
-      <div className="flex items-start justify-between">
-        <div className="min-w-0">
-          <h2 className="text-base font-semibold text-slate-900">{title}</h2>
-
-          <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-            {description}
-          </p>
-        </div>
-
-        <div
-          className="
-            ml-3
-            hidden
-            shrink-0
-            rounded-lg
-            bg-slate-50
-            px-2.5
-            py-1.5
-            text-xs
-            font-medium
-            text-slate-500
-            sm:block
-          "
-        >
-          Last 6 months
-        </div>
-      </div>
-
-      {/* Chart */}
-
-      <div className="mt-6 h-48">
-        <div
-          className="
-            relative
-            flex
-            h-full
-            items-end
-            gap-2
-            overflow-hidden
-            rounded-xl
-            bg-slate-50
-            px-3
-            pb-3
-            pt-5
-          "
-        >
-          {/* Grid */}
-
-          <div className="pointer-events-none absolute inset-x-3 top-8 border-t border-slate-200" />
-
-          <div className="pointer-events-none absolute inset-x-3 top-1/2 border-t border-slate-200" />
-
-          <div className="pointer-events-none absolute inset-x-3 bottom-3 border-t border-slate-200" />
-
-          {/* Bars */}
-
-          {bars.map((height, index) => (
-            <div
-              key={index}
-              className="
-                relative
-                z-10
-                flex
-                flex-1
-                items-end
-              "
-            >
-              <div
-                style={{
-                  height: `${height}%`,
-                }}
-                className="
-                  w-full
-                  rounded-t-md
-                  bg-indigo-500/80
-                  transition
-                  hover:bg-indigo-600
-                "
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ============================================================
-   HELPERS
-============================================================ */
-
 const formatStatus = (value) => {
   if (!value) return "Low";
-
   return value
     .toLowerCase()
     .replace(/[-_]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
 };
-
 const formatTaskStatus = (value) => {
   if (!value) return "Pending";
-
   const formatted = value
     .toLowerCase()
     .replace(/[-_]/g, " ")
     .replace(/\b\w/g, (char) => char.toUpperCase());
-
   return formatted === "In progress" ? "In Progress" : formatted;
 };
-
 export default AdminDashboard;

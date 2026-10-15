@@ -42,22 +42,22 @@ module.exports.loginUser = async (req, res) => {
     secure: process.env.NODE_ENV === "production",
   };
 
-  return res
-    .status(200)
-    .cookie("token", token, cookieOptions)
-    .json({
-      msg: "User logged in successful",
-    });
+  return res.status(200).cookie("token", token, cookieOptions).json({
+    msg: "User logged in successful",
+  });
 };
 
 module.exports.logout = async (req, res) => {
-  return res.clearCookie("token", {
-    httpOnly: true,
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    secure: process.env.NODE_ENV === "production",
-  }).status(200).json({
-    msg: "User logged out successful",
-  });
+  return res
+    .clearCookie("token", {
+      httpOnly: true,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+    })
+    .status(200)
+    .json({
+      msg: "User logged out successful",
+    });
 };
 
 module.exports.me = async (req, res) => {
@@ -67,17 +67,8 @@ module.exports.me = async (req, res) => {
     throw new AppError(404, "User not found");
   }
 
-  const userData = {
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    organisationId: user.organisationId,
-    teamId: user.teamId,
-    isActive: user.isActive,
-  };
-
   return res.status(200).json({
     msg: "User fetched successfully",
-    data: userData,
+    data: user,
   });
 };

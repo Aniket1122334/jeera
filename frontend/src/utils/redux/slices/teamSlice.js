@@ -12,7 +12,10 @@ export const getTeams = createAsyncThunk(
         },
       );
 
-      return response.data;
+      return {
+        ...response.data,
+        data: (response.data?.data || []).filter((team) => team.isActive),
+      };
     } catch (error) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.error ||

@@ -87,7 +87,7 @@ const ProtectedLayout = () => {
       <Navbar user={user} />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
-        <Sidebar navItems={navItems} />
+        <Sidebar navItems={navItems} user={user} />
 
         <main className="min-w-0 flex-1 pb-20 lg:pb-0 lg:pl-[72px]">
           <Outlet />
